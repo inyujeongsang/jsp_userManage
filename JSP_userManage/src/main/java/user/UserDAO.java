@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class UserDAO {
 	private Connection conn;
@@ -61,6 +60,11 @@ public class UserDAO {
 			pstmt.setString(3, user.getUserName());
 			pstmt.setString(4, user.getUserGender());
 			pstmt.setString(5, user.getUserEmail());
+			
+			int result = pstmt.executeUpdate();
+			if(result == 1) {
+				return 0;
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}

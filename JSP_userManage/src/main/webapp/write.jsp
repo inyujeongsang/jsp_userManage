@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter" %>
+<%@ page import="bbs.Bbs" %>
+<%@ page import="bbs.BbsDAO" %>
 <!doctype html>
 <html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>JSP login페이지</title>
+    <title>JSP 게시판 페이지</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   </head>
   <style>
@@ -23,6 +25,9 @@
   if(session.getAttribute("userID")!=null){
 	  userID = (String)session.getAttribute("userID");
   }
+//   if (useID == null){
+	  
+//   }
   %>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -33,10 +38,10 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" href="main.jsp">메인</a>
+                        <a class="nav-link" href="main.jsp">메인</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="bbs.jsp">게시판</a>
+                        <a class="nav-link active" href="write.jsp">게시판</a>
                     </li>
                 </ul>
                 <%
@@ -72,24 +77,35 @@
             </div>
         </div>
     </nav>
-  	<div class="container">
-        <div class="row">
-            <div class="col-md-6 offset-md-3 p-3 bg-secondary-subtle my-5 rounded">
-                <form class="p-3" action="loginAction.jsp">
-	                <h2 class="text-center"><b>로그인</b></h2>
-                    <div class="form-group py-2">
-                        <label for="userID">아이디</label>
-                        <input type="text" class="form-control" id="userID" name="userID" placeholder="아이디 입력">
-                    </div>
-                    <div class="form-group py-2">
-                        <label for="userPassword">비밀번호</label>
-                        <input type="password" class="form-control" id="userPassword" name="userPassword"placeholder="비밀번호 입력">
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="float:right; margin-top:10px;">로그인</button>
-                </form>
-            </div>
+    <div class="container mt-5">
+        <h2>게시판</h2>
+        <form method="post" action="writeAction.jsp">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th colspan="2" scope="col">게시판 글쓰기 양식</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 글 제목 -->
+	            <tr>
+	                <td><input type="text" class="form-control" placeholder="글 제목" name="bbsTitle" maxlength="50"></td>
+	            </tr>
+	            <!-- 글 내용 -->
+	            <tr>
+	                <td><textarea class="form-control" placeholder="글 내용" name="bbsContent" maxlength="2048" style="height:350px;"></textarea></td>
+	            </tr>
+            </tbody>
+        </table>
+        <!-- 글쓰기 버튼 -->
+        <div class="d-flex justify-content-end">
+            <input type="submit" class="btn btn-primary pull-right" value="글쓰기">
         </div>
+        </form>
     </div>
+    
+    
+    
   
  	<script
   src="https://code.jquery.com/jquery-3.7.1.js"

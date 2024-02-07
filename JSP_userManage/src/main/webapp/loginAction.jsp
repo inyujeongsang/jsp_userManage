@@ -39,6 +39,7 @@
 			session.setAttribute("userID",user.getUserID());//세션ID부여
 			PrintWriter script = response.getWriter();
 			script.println("<script>");
+			script.println("alert('로그인 성공.')");
 			script.println("location.href = 'main.jsp'");
 			script.println("</script>");
 		} else if(result == 0){

@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter" %>
+<%@ page import="bbs.BbsDAO" %>
+<%@ page import="bbs.Bbs" %>
+<%@ page import="java.util.*" %>
 <!doctype html>
 <html>
   <head>
@@ -16,12 +19,20 @@
 		    right: 0;
 		    overflow-x: hidden;
 		}
+		a, a:hover {
+		color: #000000;
+		text-decoration: none;
+		}
   </style>
   <body>
   <%
   	String userID = null;
   if(session.getAttribute("userID")!=null){
 	  userID = (String)session.getAttribute("userID");
+  }
+  int pageNumber = 1;
+  if(request.getParameter("pageNumber")!=null){
+	  pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
   }
   %>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -32,11 +43,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="main.jsp">메인</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">게시판</a>
+                        <a class="nav-link active" href="#">게시판</a>
                     </li>
                 </ul>
                 <%
@@ -72,24 +83,57 @@
             </div>
         </div>
     </nav>
-  	<div class="container">
-        <div class="row">
-            <div class="col-md-6 offset-md-3 p-3 bg-secondary-subtle my-5 rounded">
-                <form class="p-3" action="loginAction.jsp">
-	                <h2 class="text-center"><b>로그인</b></h2>
-                    <div class="form-group py-2">
-                        <label for="userID">아이디</label>
-                        <input type="text" class="form-control" id="userID" name="userID" placeholder="아이디 입력">
-                    </div>
-                    <div class="form-group py-2">
-                        <label for="userPassword">비밀번호</label>
-                        <input type="password" class="form-control" id="userPassword" name="userPassword"placeholder="비밀번호 입력">
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="float:right; margin-top:10px;">로그인</button>
-                </form>
-            </div>
-        </div>
+    <div class="container mt-5">
+        <h2>게시판</h2>
+        <form method="post" action="writeAction.jsp">
+	        <table class="table">
+	             <thead>
+                <tr>
+                    <th scope="col">번호</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                	BbsDAO bbsDAO = new BbsDAO();
+                	ArrayList<Bbs> list = bbsDAO.getList(pageNumber);
+                	for(int i =0; i<list.size(); i++){
+                %>
+                <tr>
+                	<td><%=list.get(i).getBbsID() %></td>
+                	<td><a href="view.jsp?bbsID=<%=list.get(i).getBbsID()%>"><%=list.get(i).getBbsTitle() %></a></td>
+                	<td><%=list.get(i).getUserID() %></td>
+                	<td><%=list.get(i).getBbsDate().substring(0,11)+list.get(i).getBbsDate().substring(11,13)+"시"+list.get(i).getBbsDate().substring(14,16)+"분" %></td>
+                </tr>
+                <%
+                	}
+                %>
+            </tbody>
+	        </table>
+	        <div class="d-flex justify-content-between my-4">
+		        <%
+		        	if(pageNumber!=1){
+		        %>
+		        	<a href="bbs.jsp?pageNumber=<%=pageNumber - 1%>" class="btn btn-success btn-arrow-left">이전</a>
+		        <% 		
+		        	} if(bbsDAO.nextPage(pageNumber + 1)){
+	   	        %>
+	        		<a href="bbs.jsp?pageNumber=<%=pageNumber + 1%>" class="btn btn-success btn-arrow-right">다음</a>
+		        <% 		
+		        	}
+		        %>
+		        <!-- 글쓰기 버튼 -->
+		        <div>
+		            <a href="write.jsp" class="btn btn-primary pull-right">글쓰기</a>
+	        	</div>
+	        </div>
+        </form>
     </div>
+    
+    
+    
   
  	<script
   src="https://code.jquery.com/jquery-3.7.1.js"
